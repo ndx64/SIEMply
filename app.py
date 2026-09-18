@@ -24,7 +24,7 @@ def index():
     return render_template("index.html")
 
 
-# ---------- Chế độ 1: theo dõi real-time (tail -f) ----------
+
 @app.route("/watch/start", methods=["POST"])
 def watch_start():
     data = request.get_json(silent=True) or {}
@@ -39,7 +39,7 @@ def watch_start():
 
     t = threading.Thread(target=_safe_watch, args=(path, log_type), daemon=True)
     t.start()
-    # đợi 1 chút để bắt lỗi FileNotFound sớm, không bắt buộc
+  
     time.sleep(0.3)
 
     return jsonify({"status": "watching", "path": path, "log_type": log_type})
@@ -63,7 +63,7 @@ def watch_stop():
     return jsonify({"status": "stopped"})
 
 
-# ---------- Chế độ 2: upload file log có sẵn, phân tích batch ----------
+
 @app.route("/analyze", methods=["POST"])
 def analyze_upload():
     log_type = request.form.get("log_type")
