@@ -41,7 +41,7 @@ function changeMode() {
   document.getElementById("uploadControls").style.display = mode === "upload" ? "flex" : "none"
 }
 
-// ---- Chế độ Watch real-time ----
+
 async function startWatch() {
   const path = document.getElementById("pathInput").value.trim()
   const logType = document.getElementById("logTypeSelect").value
@@ -84,7 +84,7 @@ async function stopWatch() {
   }
 }
 
-// ---- Chế độ Upload file batch ----
+
 async function uploadFile() {
   const fileInput = document.getElementById("fileInput")
   const logType = document.getElementById("logTypeSelect").value
