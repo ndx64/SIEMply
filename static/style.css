@@ -1,0 +1,246 @@
+*{
+box-sizing:border-box;
+}
+
+html{
+height:100%;
+background:#0b1120;
+}
+
+body{
+min-height:100vh;
+background:#0b1120;
+color:#e2e8f0;
+font-family:-apple-system,Segoe UI,Arial,sans-serif;
+margin:0;
+padding:32px 24px;
+display:flex;
+justify-content:center;
+}
+
+.page{
+width:100%;
+max-width:960px;
+}
+
+h1{
+font-size:22px;
+margin:0 0 20px 0;
+}
+
+h3{
+font-size:14px;
+text-transform:uppercase;
+letter-spacing:0.05em;
+color:#94a3b8;
+margin:0 0 8px 0;
+}
+
+.controls{
+display:flex;
+align-items:center;
+gap:10px;
+flex-wrap:wrap;
+background:#111827;
+border:1px solid #1f2937;
+border-radius:10px;
+padding:12px;
+margin-bottom:12px;
+}
+
+select, input[type="text"]{
+background:#1e293b;
+color:#e2e8f0;
+border:1px solid #334155;
+padding:8px 10px;
+border-radius:6px;
+font-size:13px;
+}
+
+input[type="text"]{
+flex:1;
+min-width:260px;
+}
+
+input[type="file"]{
+color:#94a3b8;
+font-size:13px;
+}
+
+button{
+background:#1e293b;
+color:white;
+border:1px solid #334155;
+padding:8px 16px;
+border-radius:6px;
+cursor:pointer;
+font-size:13px;
+font-weight:600;
+transition:background 0.15s;
+}
+
+button:hover{
+background:#334155;
+}
+
+button:active{
+transform:translateY(1px);
+}
+
+#watchStartBtn, #uploadBtn{
+background:#0ea5e9;
+border-color:#0ea5e9;
+}
+#watchStartBtn:hover, #uploadBtn:hover{
+background:#0284c7;
+}
+
+#watchStopBtn{
+background:#334155;
+}
+
+#clearBtn{
+background:transparent;
+color:#94a3b8;
+border-color:#334155;
+}
+#clearBtn:hover{
+color:#e2e8f0;
+}
+
+#exportBtn{
+background:#16a34a;
+border-color:#16a34a;
+}
+#exportBtn:hover{
+background:#15803d;
+}
+
+.status-row{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:12px;
+margin-bottom:16px;
+}
+
+.card{
+background:#111827;
+border:1px solid #1f2937;
+border-radius:10px;
+padding:14px 16px;
+}
+
+.card .label{
+font-size:12px;
+color:#94a3b8;
+margin-bottom:4px;
+}
+
+.card .value{
+font-size:20px;
+font-weight:700;
+}
+
+.card .value.status-running{
+color:#4ade80;
+}
+.card .value.status-stopped{
+color:#94a3b8;
+}
+.card .value.attack-detected{
+color:#f87171;
+}
+
+.chart-card{
+background:#111827;
+border:1px solid #1f2937;
+border-radius:10px;
+padding:14px 16px;
+margin-bottom:16px;
+}
+
+.chart-wrap{
+position:relative;
+height:200px;
+}
+
+.chart-wrap canvas{
+width:100% !important;
+height:100% !important;
+}
+
+.table-card{
+background:#111827;
+border:1px solid #1f2937;
+border-radius:10px;
+padding:14px 16px;
+}
+
+.table-scroll{
+max-height:320px;
+overflow-y:auto;
+border-radius:6px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+font-size:13px;
+}
+
+th,td{
+padding:8px 10px;
+border-bottom:1px solid #1f2937;
+text-align:left;
+}
+
+th{
+position:sticky;
+top:0;
+background:#0f172a;
+color:#94a3b8;
+font-weight:600;
+font-size:12px;
+text-transform:uppercase;
+letter-spacing:0.03em;
+}
+
+tbody tr:hover{
+background:#1e293b;
+}
+
+td.detail-cell{
+max-width:340px;
+overflow:hidden;
+text-overflow:ellipsis;
+white-space:nowrap;
+}
+
+.sev-badge{
+display:inline-block;
+padding:2px 8px;
+border-radius:999px;
+font-size:11px;
+font-weight:700;
+}
+
+tr.sev-critical .sev-badge{
+background:rgba(248,113,113,0.2);
+color:#f87171;
+}
+
+tr.sev-high .sev-badge{
+background:rgba(251,191,36,0.2);
+color:#fbbf24;
+}
+
+tr.sev-medium .sev-badge{
+background:rgba(56,189,248,0.2);
+color:#38bdf8;
+}
+
+.empty-row td{
+text-align:center;
+color:#64748b;
+padding:20px;
+}

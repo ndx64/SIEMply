@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Log Analyzer Dashboard</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<div class="page">
+
+<h1>Log Analyzer / Mini SIEM Dashboard</h1>
+
+<div class="controls">
+  <select id="modeSelect" onchange="changeMode()">
+    <option value="watch">Watch real-time (tail -f)</option>
+    <option value="upload">Upload file log có sẵn</option>
+  </select>
+  <select id="logTypeSelect">
+    <option value="ssh">SSH auth.log</option>
+    <option value="web">Web access log (Apache/Nginx)</option>
+  </select>
+</div>
+
+<div class="controls" id="watchControls">
+  <input type="text" id="pathInput" placeholder="Đường dẫn file, vd: /var/log/auth.log" />
+  <button id="watchStartBtn" onclick="startWatch()">Start Watching</button>
+  <button id="watchStopBtn" onclick="stopWatch()">Stop</button>
+</div>
+
+<div class="controls" id="uploadControls" style="display:none;">
+  <input type="file" id="fileInput" />
+  <button id="uploadBtn" onclick="uploadFile()">Analyze File</button>
+</div>
+
+<div class="controls">
+  <button id="clearBtn" onclick="clearSystem()">Clear</button>
+  <select id="exportFormat">
+    <option value="txt">TXT</option>
+    <option value="csv">CSV</option>
+  </select>
+  <button id="exportBtn" onclick="exportAlerts()">Export</button>
+</div>
+
+<div class="status-row">
+  <div class="card">
+    <div class="label">Trạng thái</div>
+    <div class="value status-stopped" id="statusLabel">Chưa chạy</div>
+  </div>
+  <div class="card">
+    <div class="label">Dòng đã xử lý</div>
+    <div class="value" id="lineCount">0</div>
+  </div>
+  <div class="card">
+    <div class="label">Loại log</div>
+    <div class="value" id="logTypeLabel">-</div>
+  </div>
+  <div class="card">
+    <div class="label">Cảnh báo</div>
+    <div class="value" id="alertCount">0</div>
+  </div>
+</div>
+
+<div class="chart-card">
+  <h3>Events / giây</h3>
+  <div class="chart-wrap">
+    <canvas id="eventChart"></canvas>
+  </div>
+</div>
+
+<div class="table-card">
+  <h3>Alerts</h3>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>IP</th>
+          <th>Rule</th>
+          <th>Severity</th>
+          <th>Detail</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody id="alertTable">
+        <tr class="empty-row"><td colspan="5">Chưa có cảnh báo nào</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</div>
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+
+</body>
+</html>
