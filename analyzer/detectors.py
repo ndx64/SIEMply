@@ -1,13 +1,4 @@
-"""
-Rule engine: nhận event đã parse (từ parsers.py) và quyết định có tạo alert không.
 
-Nguyên tắc thiết kế (kế thừa từ DoS Detector):
-- Alert chỉ tạo 1 lần / (ip, rule) trong 1 window, tránh spam.
-- Một số pattern (SQLi/XSS/path traversal) đủ nghiêm trọng để alert ngay
-  từ 1 request duy nhất, không cần đợi ngưỡng lặp lại.
-- Brute force / scanning cần đếm số lần lặp lại trong 1 khoảng thời gian
-  (giống ip_counter + window trong DoS Detector's analyzer.py).
-"""
 from collections import defaultdict
 from datetime import datetime
 import time
@@ -37,7 +28,7 @@ def _push_alert(ip, rule, severity, detail, extra=None):
 
 
 def process_ssh_event(evt):
-    """evt: dict trả về từ parsers.parse_ssh_line (không None)."""
+    """evt: dict returned by parsers.parse_ssh_line (never None)."""
     global _ssh_last_reset
 
     ip = evt["ip"]
@@ -55,11 +46,11 @@ def process_ssh_event(evt):
             severity = "critical" if rate >= state.ssh_fail_threshold * 3 else "high"
             _push_alert(
                 ip, "SSH Brute Force", severity,
-                f"{rate} lần đăng nhập thất bại trong {state.ssh_window_seconds}s (user: {evt.get('user')})",
+                f"{rate} failed login attempts within {state.ssh_window_seconds}s (user: {evt.get('user')})",
                 extra={"user": evt.get("user"), "count": rate},
             )
 
-    # reset cửa sổ đếm brute force
+
     now = time.time()
     if now - _ssh_last_reset > state.ssh_window_seconds:
         _ssh_fail_counter.clear()
@@ -69,14 +60,14 @@ def process_ssh_event(evt):
 
 
 def process_access_event(evt):
-    """evt: dict trả về từ parsers.parse_access_line (không None)."""
+    """evt: dict returned by parsers.parse_access_line (never None)."""
     global _scan_last_reset
 
     ip = evt["ip"]
     with state.lock:
         state.line_count += 1
 
-    # 1) Payload injection rõ ràng -> alert ngay, không cần chờ lặp lại
+  
     for flag in evt.get("flags", []):
         rule_name = {
             "sqli": "SQL Injection Attempt",
@@ -89,7 +80,7 @@ def process_access_event(evt):
             extra={"method": evt["method"], "path": evt["path"], "status": evt["status"]},
         )
 
-    # 2) Đếm request 404 liên tiếp / IP -> nghi bị dò thư mục (dirb/gobuster...)
+    
     if evt.get("status") == 404:
         _scan_404_counter[ip] += 1
         rate = _scan_404_counter[ip]
@@ -99,7 +90,7 @@ def process_access_event(evt):
                 state.alerted_keys.add(key)
             _push_alert(
                 ip, "Directory/File Scanning", "medium",
-                f"{rate} request trả về 404 trong {state.scan_window_seconds}s (dấu hiệu dò thư mục tự động)",
+                f"{rate} requests returned 404 within {state.scan_window_seconds}s (indicates automated directory probing)",
                 extra={"count": rate},
             )
 
@@ -112,7 +103,7 @@ def process_access_event(evt):
 
 
 def tick_event_history():
-    """Gọi mỗi giây để chốt số event/giây vào event_history (vẽ chart)."""
+    """Called every second to record the events/sec count into event_history (for the chart)."""
     with state.lock:
         state.event_history.append({
             "time": datetime.now().strftime("%H:%M:%S"),
